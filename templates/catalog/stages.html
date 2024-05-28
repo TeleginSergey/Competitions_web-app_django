@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Stages</h1>
+
+    {% if stages_list %}
+    <ul>
+
+        {% for stage in stages_list %}
+        <li>
+            <a href="{% url 'stage' %}?id={{stage.id}}"> {{ stage.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    {% else %}
+        <p> There are no stages for now.</p>
+    {% endif %}
+{% endblock %}

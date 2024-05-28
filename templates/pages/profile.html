@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {% if client_data %}
+            <h5>Your profile data:</h5>
+            <ul>
+                {% for key, value in client_data.items %}
+                    <li> {{key}}: {{value}} </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No client data to show..</p>
+        {% endif %}
+    {% else %}
+        <h4>You have to be logged in to view this page!</h4>
+    {% endif %}
+{% endblock %}

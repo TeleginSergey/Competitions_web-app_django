@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<h1>COMPETITIONS Home</h1>
+
+    <p>Welcome to <em>COMPETITIONS</em>, website about different competitions at all the world!</p>
+
+<h2>Dynamic content</h2>
+
+    <p>Our website has the following record counts:</p>
+    <ul>
+        <li><strong>Competitions:</strong> {{ competitions }}</li>
+        <li><strong>Types of sport:</strong> {{ sports }}</li>
+    </ul>
+
+{% endblock %}

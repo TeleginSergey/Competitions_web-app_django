@@ -1,0 +1,38 @@
+on: [push]
+jobs:
+  container-job:
+    name: Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_HOST: 127.0.0.1
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        ports:
+        - 5432:5432
+    steps:
+    - uses: actions/checkout@v2
+    - name: Python installation
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+    - name: Dependencies installation
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install -r requirements.txt
+        chmod +x testing/test.sh
+    - name: Test views
+      run: ./testing/test.sh testing.test_views
+    - name: Test models
+      run: ./testing/test.sh testing.test_models
+    - name: Test api
+      run: ./testing/test.sh testing.test_api
+    - name: Test forms
+      run: ./testing/test.sh testing.test_forms
+    - name: Test buy
+      run: ./testing/test.sh testing.test_buy
+    - name: Test add_funds
+      run: ./testing/test.sh testing.test_add_funds

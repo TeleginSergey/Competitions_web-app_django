@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Competition page</h1>
+
+    {% if competition %}
+    <ul>
+
+        <li>
+            <a>Title: {{ competition.title }}</a><br>
+            <a>Date of start: {{ competition.date_of_start }}</a><br>
+            <a>Date of end: {{ competition.date_of_end }}</a>
+        </li>
+    </ul>
+    {% else %}
+        <p>Competition not found.</p>
+    {% endif %}
+{% endblock %}

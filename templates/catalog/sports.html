@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Sports</h1>
+
+    {% if sports_list %}
+    <ul>
+
+        {% for sport in sports_list %}
+        <li>
+            <a href="{% url 'sport' %}?id={{sport.id}}"> {{ sport.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    {% else %}
+        <p> There are no types of sport for now.</p>
+    {% endif %}
+{% endblock %}

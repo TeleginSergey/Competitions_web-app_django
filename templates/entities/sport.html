@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Sport page</h1>
+
+    {% if sport %}
+    <ul>
+
+        <li>
+            <a>Title: {{ sport.title }}</a><br>
+            <a>Description: {{ sport.description }}</a>
+        </li>
+    </ul>
+    {% else %}
+        <p>Sport not found.</p>
+    {% endif %}
+{% endblock %}

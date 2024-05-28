@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Stage page</h1>
+
+    {% if stage %}
+    <ul>
+        <li>
+            <a>Title: {{ stage.title }}</a><br>
+            <a>Date: {{ stage.date }}</a><br>
+            <a>Place: {{ stage.place }}</a>
+        </li>
+    </ul>
+    {% else %}
+        <p>Stage not found.</p>
+    {% endif %}
+{% endblock %}

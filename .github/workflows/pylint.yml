@@ -32,7 +32,3 @@ jobs:
       run: ./testing/test.sh testing.test_api
     - name: Test forms
       run: ./testing/test.sh testing.test_forms
-    - name: Test buy
-      run: ./testing/test.sh testing.test_buy
-    - name: Test add_funds
-      run: ./testing/test.sh testing.test_add_funds

@@ -1,8 +1,8 @@
-from django.urls import path, include
+"""Module, which manage routes in our website."""
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from . import views
-
 
 router = DefaultRouter()
 router.register(r'competitions', views.CompetitionViewSet)

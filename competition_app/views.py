@@ -99,7 +99,7 @@ def create_view(model, model_name, template, redirect_page):
         except exceptions.ValidationError:
             return redirect(redirect_page)
         if not target:
-            return redirect_page(redirect_page)
+            return redirect(redirect_page)
         context = {model_name: target}
         return render(
             request,
@@ -174,9 +174,9 @@ def create_viewset(model_class, serializer):
             Returns:
                 Response: Response object with the serialized data and appropriate status code.
             """
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
             try:
-                serializer = self.get_serializer(data=request.data)
-                serializer.is_valid(raise_exception=True)
                 self.perform_create(serializer)
                 headers = self.get_success_headers(serializer.data)
                 return response.Response(
@@ -202,7 +202,10 @@ def create_viewset(model_class, serializer):
             instance = self.get_object()
             serializer = self.get_serializer(instance, data=request.data)
             serializer.is_valid(raise_exception=True)
-            self.perform_update(serializer)
+            try:
+                self.perform_update(serializer)
+            except exceptions.ValidationError as exc:
+                return response.Response({'detail': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
             return response.Response(serializer.data)
 
     return CustomViewSet

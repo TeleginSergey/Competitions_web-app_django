@@ -170,6 +170,13 @@ class Competition(UUIDMixin, CreatedMixin, ModifiedMixin):
 
     def clean(self):
         """Clean method for the Competition model to perform validation checks."""
+        check_created(self.created)
+        check_modified(self.modified)
+        check_dates_order(
+            self.created,
+            self.modified,
+            config.MESSAGE_CREATED_MODIFIED_INCORRECT_ORDER,
+        )
         if self.date_of_start and self.date_of_end:
             check_dates_order(
                 self.date_of_start,
@@ -222,6 +229,15 @@ class Sport(UUIDMixin, CreatedMixin, ModifiedMixin):
         )
         return super().save(*args, **kwargs)
 
+    def clean(self) -> None:
+        check_created(self.created)
+        check_modified(self.modified)
+        check_dates_order(
+            self.created,
+            self.modified,
+            config.MESSAGE_CREATED_MODIFIED_INCORRECT_ORDER,
+        )
+
     def __str__(self) -> str:
         """
         Return the string representation of the Sport instance.
@@ -258,6 +274,9 @@ class CompetitionSport(UUIDMixin, CreatedMixin):
         """
         check_created(self.created)
         return super().save(*args, **kwargs)
+
+    def clean(self) -> None:
+        check_created(self.created)
 
     def __str__(self) -> str:
         """
@@ -354,6 +373,27 @@ class Stage(UUIDMixin, CreatedMixin, ModifiedMixin):
             else:
                 raise ValidationError("Stage's competition_sport has no competition associated.")
         return super().save(*args, **kwargs)
+
+    def clean(self) -> None:
+        check_created(self.created)
+        check_modified(self.modified)
+        check_dates_order(
+            self.created,
+            self.modified,
+            config.MESSAGE_CREATED_MODIFIED_INCORRECT_ORDER,
+        )
+        if self.date and self.competition_sport:
+            if self.competition_sport.competition:
+                competition_end_date = self.competition_sport.competition.date_of_end
+                competition_start_date = self.competition_sport.competition.date_of_start
+
+                if competition_end_date and self.date > competition_end_date:
+                    raise ValidationError(_("Stage's date is after end date of competition!"))
+
+                if competition_start_date and self.date < competition_start_date:
+                    raise ValidationError(_("Stage's date is before start date of competition!"))
+            else:
+                raise ValidationError("Stage's competition_sport has no competition associated.")
 
     def __str__(self) -> str:
         """

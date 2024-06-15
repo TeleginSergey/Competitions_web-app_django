@@ -12,7 +12,7 @@ Stages, competitions and sports:
 - stage - name, date/time, place
 
 
-# Library_django insruction
+# Competition web-app
 
 ## Attention!
 ## Some commands can be diffirent depending on your OS and distributions
@@ -20,7 +20,7 @@ Stages, competitions and sports:
 
 
 ## Dependency installation
-Intsall different python's frameworks and libraries on your computer (will be better if you will use venv)
+Install different python's frameworks and libraries on your computer (will be better if you will use venv)
 ```
 pip install -r requirements.txt
 ```
@@ -62,9 +62,10 @@ After it, with this command
 ```
 psql -h localhost -p 48746 -U competition_user competition_db
 ```
+password is competition_password!
 you will get into open-source relational database management system, there write:
 ```
-create schema competition;
+create schema competition_schema;
 ```
 "\q" for quit.
 
@@ -82,7 +83,7 @@ You can launch it later by simply typing the command:
 
 
 ## Launching tests command
-- python3 manage.py test tests
+- python3 manage.py test testing
 
 Attention! If the tests are not passing, try renaming the folder "tests" to a different name, for example "testing". Accordingly, you will also need to change name "tests" in settings.py.
 
@@ -90,16 +91,5 @@ Attention! If the tests are not passing, try renaming the folder "tests" to a di
 To enter the admin panel ('admin/'), you need to create a superuser. Here is the command for creating one:
 - python3 manage.py createsuperuser
 
-## Problems
-
-### Logout
-if you can't log out of your account on this web-app,
-insert at templates/base_generic.html instead logout (delete whe whole 16 line) this code:
-```
-<form method="post" action="{% url 'logout' %}?next={{request.path}}">
-    {% csrf_token %}
-    <input type="submit" value="Logout">
-</form>
-```
 
 Thanks for reading:)

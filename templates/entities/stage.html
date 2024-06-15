@@ -8,7 +8,9 @@
         <li>
             <a>Title: {{ stage.title }}</a><br>
             <a>Date: {{ stage.date }}</a><br>
-            <a>Place: {{ stage.place }}</a>
+            <a>Place: {{ stage.place }}</a><br>
+            <a>Competition:</a> <a href="{% url 'competition' %}?id={{ competition.id }}"> {{ competition.title }}</a><br>
+            <a>Sport:</a> <a href="{% url 'sport' %}?id={{ sport.id }}">{{ sport.title }}</a>
         </li>
     </ul>
     {% else %}

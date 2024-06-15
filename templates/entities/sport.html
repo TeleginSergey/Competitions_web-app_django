@@ -11,6 +11,18 @@
             <a>Description: {{ sport.description }}</a>
         </li>
     </ul>
+        {% if competition_list %}
+            <h3>Competitions:</h3>
+            <ul>
+                {% for competition in competition_list %}
+                    <li>
+                        <a href="{% url 'competition' %}?id={{ competition.id }}"> {{ competition.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>There are no competitions for now.</p>
+        {% endif %}
     {% else %}
         <p>Sport not found.</p>
     {% endif %}

@@ -5,13 +5,34 @@
 
     {% if competition %}
     <ul>
-
         <li>
-            <a>Title: {{ competition.title }}</a><br>
-            <a>Date of start: {{ competition.date_of_start }}</a><br>
-            <a>Date of end: {{ competition.date_of_end }}</a>
+            <strong>Title: {{ competition.title }}</strong><br>
+            Date of start: {{ competition.date_of_start }}<br>
+            Date of end: {{ competition.date_of_end }}
         </li>
     </ul>
+    {% if sport_list %}
+        <h3>Sports:</h3>
+        <ul>
+            {% for sport, stages in sport_list %}
+                <li>
+                    <a href="{% url 'sport' %}?id={{ sport.id }}">{{ sport.title }}</a>
+                </li>
+                {% if stages %}
+                <h4>Stages:</h4>
+                <ul>
+                    {% for stage in stages %}
+                        <li>
+                            <a href="{% url 'stage' %}?id={{ stage.id }}">{{ stage.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no types of sport for now.</p>
+    {% endif %}
     {% else %}
         <p>Competition not found.</p>
     {% endif %}

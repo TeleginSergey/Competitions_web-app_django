@@ -100,7 +100,25 @@ def create_view(model, model_name, template, redirect_page):
             return redirect(redirect_page)
         if not target:
             return redirect(redirect_page)
-        context = {model_name: target}
+        if model == Competition:
+            sport_list = target.sports.all()
+            sport_stages_list = []
+            for sport in sport_list:
+                competition_sport = CompetitionSport.objects.get(competition=target, sport=sport)
+                stages = Stage.objects.filter(competition_sport=competition_sport.id)
+                sport_stages_list.append((sport, stages))
+            context = {model_name: target, 'sport_list': sport_stages_list}
+        
+        if model == Sport:
+            competition_list = target.competitions.all()
+            context = {model_name: target, 'competition_list': competition_list}
+        
+        if model == Stage:
+            competition_sport = CompetitionSport.objects.get(id=target.competition_sport.id)
+            competition = Competition.objects.get(id=competition_sport.competition.id)
+            sport = Sport.objects.get(id=competition_sport.sport.id)
+            context = {model_name: target, 'competition': competition, 'sport': sport}
+
         return render(
             request,
             template,

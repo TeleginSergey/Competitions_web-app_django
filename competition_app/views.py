@@ -67,6 +67,55 @@ SportListView = create_listview(Sport, 'sports', 'catalog/sports.html')
 StageListView = create_listview(Stage, 'stages', 'catalog/stages.html')
 
 
+def get_competition_context(target):
+    """
+    Get context data for a Competition model instance.
+
+    Args:
+        target: The Competition model instance.
+
+    Returns:
+        A dictionary containing the sport list with their stages.
+    """
+    sport_list = target.sports.all()
+    sport_stages_list = []
+    for sport in sport_list:
+        competition_sport = CompetitionSport.objects.get(competition=target, sport=sport)
+        stages = Stage.objects.filter(competition_sport=competition_sport)
+        sport_stages_list.append((sport, stages))
+    return {'sport_list': sport_stages_list}
+
+
+def get_sport_context(target):
+    """
+    Get context data for a Sport model instance.
+
+    Args:
+        target: The Sport model instance.
+
+    Returns:
+        A dictionary containing the list of competitions related to the sport.
+    """
+    return {'competition_list': target.competitions.all()}
+
+
+def get_stage_context(target):
+    """
+    Get context data for a Stage model instance.
+
+    Args:
+        target: The Stage model instance.
+
+    Returns:
+        A dictionary containing the competition and sport related to the stage.
+    """
+    competition_sport = target.competition_sport
+    return {
+        'competition': competition_sport.competition,
+        'sport': competition_sport.sport,
+    }
+
+
 def create_view(model, model_name, template, redirect_page):
     """
     Create a view function for displaying a single instance of a model.
@@ -83,47 +132,37 @@ def create_view(model, model_name, template, redirect_page):
     @decorators.login_required
     def view(request):
         """
-        Render a specific model instance based on the given id.
+        Create a view function for displaying a single instance of a model.
 
         Args:
-            request (HttpRequest): the HTTP request object
+            request: request from a web-app
 
         Returns:
-            HttpResponse: rendered template with the context containing the model instance
+            A view function that requires login and renders the template with
+            the model instance and additional context data if applicable.
         """
-        id_ = request.GET.get('id', None)
+        id_ = request.GET.get('id')
         if not id_:
             return redirect(redirect_page)
-        try:
-            target = model.objects.get(id=id_) if id_ else None
-        except exceptions.ValidationError:
-            return redirect(redirect_page)
-        if not target:
-            return redirect(redirect_page)
-        if model == Competition:
-            sport_list = target.sports.all()
-            sport_stages_list = []
-            for sport in sport_list:
-                competition_sport = CompetitionSport.objects.get(competition=target, sport=sport)
-                stages = Stage.objects.filter(competition_sport=competition_sport.id)
-                sport_stages_list.append((sport, stages))
-            context = {model_name: target, 'sport_list': sport_stages_list}
-        
-        if model == Sport:
-            competition_list = target.competitions.all()
-            context = {model_name: target, 'competition_list': competition_list}
-        
-        if model == Stage:
-            competition_sport = CompetitionSport.objects.get(id=target.competition_sport.id)
-            competition = Competition.objects.get(id=competition_sport.competition.id)
-            sport = Sport.objects.get(id=competition_sport.sport.id)
-            context = {model_name: target, 'competition': competition, 'sport': sport}
 
-        return render(
-            request,
-            template,
-            context,
-        )
+        try:
+            target = model.objects.get(id=id_)
+        except (model.DoesNotExist, exceptions.ValidationError):
+            return redirect(redirect_page)
+
+        context = {model_name: target}
+
+        if model == Competition:
+            context.update(get_competition_context(target))
+
+        if model == Sport:
+            context.update(get_sport_context(target))
+
+        if model == Stage:
+            context.update(get_stage_context(target))
+
+        return render(request, template, context)
+
     return view
 
 

@@ -230,6 +230,7 @@ class Sport(UUIDMixin, CreatedMixin, ModifiedMixin):
         return super().save(*args, **kwargs)
 
     def clean(self) -> None:
+        """Clean method for validating and cleaning the data of a Django Sport instance."""
         check_created(self.created)
         check_modified(self.modified)
         check_dates_order(
@@ -276,6 +277,7 @@ class CompetitionSport(UUIDMixin, CreatedMixin):
         return super().save(*args, **kwargs)
 
     def clean(self) -> None:
+        """Clean method for validating and cleaning the data of Django CompetitionSport instance."""
         check_created(self.created)
 
     def __str__(self) -> str:
@@ -375,6 +377,12 @@ class Stage(UUIDMixin, CreatedMixin, ModifiedMixin):
         return super().save(*args, **kwargs)
 
     def clean(self) -> None:
+        """Clean method for validating and cleaning the data of a Django Stage instance.
+
+        Raises:
+            ValidationError: The date of the stage does not fall
+                within the competition time interval.
+        """
         check_created(self.created)
         check_modified(self.modified)
         check_dates_order(

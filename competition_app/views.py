@@ -292,6 +292,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             Client.objects.create(user=user)
+            return redirect('/accounts/login/')
         else:
             errors = form.errors
     else:

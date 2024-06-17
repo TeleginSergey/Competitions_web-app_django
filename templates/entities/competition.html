@@ -12,7 +12,7 @@
         </li>
     </ul>
     {% if sport_list %}
-        <h3>Sports:</h3>
+        <h2>Sports:</h2>
         <ul>
             {% for sport, stages in sport_list %}
                 <li>
@@ -26,7 +26,7 @@
                             <a href="{% url 'stage' %}?id={{ stage.id }}">{{ stage.title }}</a>
                         </li>
                     {% endfor %}
-                </ul>
+                </ul><br><br>
                 {% endif %}
             {% endfor %}
         </ul>
